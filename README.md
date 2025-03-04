@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🎴 Higher-Lower Card Game
 
-## Getting Started
+A sleek, interactive card game built with **Next.js** where players test their luck by guessing whether the next card will be **higher or lower** than the current one. Features a **visual style inspired by Squid Game**.
 
-First, run the development server:
+![Higher-Lower Card Game](https://example.com/screenshot.png)
+
+---
+
+## 🎮 Game Overview
+
+Challenge yourself in this **addictive higher-lower card game** featuring:
+
+- 🎨 **Modern UI** – Sleek animations and responsive design with Squid Game visual elements  
+- 🃏 **Simple Gameplay** – Guess if the next card will be **higher or lower**  
+- 🏆 **Score Tracking** – Beat your high score with each playthrough  
+- ✅ **Visual Feedback** – Immediate feedback on your guesses  
+
+---
+
+## 🚀 Features
+
+✔ **Squid Game Themed** – Visual style inspired by the popular Netflix series  
+✔ **Animated Card Reveals** – Smooth animations for card flips and reveals  
+✔ **Score Tracking** – Local storage for persistent high scores  
+✔ **Responsive Design** – Play on **any device**  
+✔ **Modern UI** – Crafted with a **vibrant neon aesthetic**  
+✔ **Game Instructions** – Integrated **how-to-play guide**  
+
+---
+
+## 🛠️ Technologies Used
+
+- ⚛️ **Next.js** – React framework  
+- 🎬 **Framer Motion** – Animation library  
+- 🎨 **Tailwind CSS** – Utility-first CSS framework  
+- 🃏 **Deck of Cards API** – Card generation  
+
+---
+
+## 🎲 How to Play
+
+1️⃣ **You'll see one card facing up** as your reference  
+2️⃣ **Guess** if the next card will be **higher or lower** in value  
+3️⃣ **After your guess**, the next card flips over  
+4️⃣ **If correct**, your score increases, and you continue  
+5️⃣ **If wrong**, **Game Over!**  
+
+🂡 **Card Values:**  
+**2 (lowest) → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → Jack → Queen → King → Ace (highest)**  
+
+---
+
+## 🚀 Getting Started
+
+### 1️⃣ Install dependencies:
 
 ```bash
+npm install
+```
+2️⃣ Run the development server:
+```bash
 npm run dev
-# or
+```
+or with Yarn:
+```bash
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3️⃣ Open in your browser:
+```bash
+http://localhost:3000
+```
+---
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 🌐 Deployment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The game can be easily deployed using Vercel:
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 📝 License
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This project is MIT licensed.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🙏 Acknowledgements
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- 🎬 **Squid Game** – Visual aesthetics inspired by the Netflix series *Squid Game*  
+- 🂡 **Card Design** – Classic playing cards with a *Squid Game* twist  
+- 🎨 **UI Elements** – Modern **neon aesthetic** inspired by the show’s visual style  
+- 🎬 **Animations** – Powered by **Framer Motion**  
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Made with ❤️ by Aditya Kuniyil Kattil
