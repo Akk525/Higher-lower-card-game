@@ -31,6 +31,7 @@ export default function Home() {
       setHighScore(parseInt(savedHighScore, 10));
     }
     fetchNewCard();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Save high score to localStorage whenever it changes
@@ -211,6 +212,89 @@ export default function Home() {
         {/* Keep background patterns as they are */}
       </div>
       
+      {/* Squid Game Floating Particles */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Circles */}
+        <motion.div 
+          className="absolute w-12 h-12 rounded-full bg-[#42c2dc] opacity-20"
+          style={{ top: '15%', left: '10%' }}
+          animate={{ 
+            y: [0, -40, 0, 20, 0],
+            x: [0, 20, 40, 20, 0],
+            opacity: [0.2, 0.3, 0.2, 0.1, 0.2]
+          }}
+          transition={{ duration: 15, repeat: Infinity, repeatType: "mirror" }}
+        />
+        <motion.div 
+          className="absolute w-8 h-8 rounded-full bg-[#ff0087] opacity-15"
+          style={{ top: '65%', left: '75%' }}
+          animate={{ 
+            y: [0, 30, 0, -20, 0],
+            x: [0, -20, -40, -20, 0],
+            opacity: [0.15, 0.25, 0.15, 0.1, 0.15]
+          }}
+          transition={{ duration: 18, repeat: Infinity, repeatType: "mirror", delay: 2 }}
+        />
+        
+        {/* Squares */}
+        <motion.div 
+          className="absolute w-14 h-14 bg-[#ff0087] opacity-20"
+          style={{ top: '30%', left: '80%' }}
+          animate={{ 
+            rotate: [0, 45, 90, 45, 0],
+            y: [0, -30, 0, 30, 0],
+            x: [0, -20, -40, -20, 0],
+            opacity: [0.2, 0.3, 0.2, 0.1, 0.2]
+          }}
+          transition={{ duration: 20, repeat: Infinity, repeatType: "mirror", delay: 1 }}
+        />
+        <motion.div 
+          className="absolute w-10 h-10 bg-[#42c2dc] opacity-15"
+          style={{ top: '70%', left: '20%' }}
+          animate={{ 
+            rotate: [0, -45, -90, -45, 0],
+            y: [0, 40, 0, -40, 0],
+            x: [0, 30, 60, 30, 0],
+            opacity: [0.15, 0.25, 0.15, 0.1, 0.15]
+          }}
+          transition={{ duration: 17, repeat: Infinity, repeatType: "mirror", delay: 3 }}
+        />
+        
+        {/* Triangles */}
+        <motion.div 
+          className="absolute w-16 h-16 opacity-20"
+          style={{ 
+            top: '20%', 
+            left: '40%',
+            clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
+            background: '#42c2dc'
+          }}
+          animate={{ 
+            rotate: [0, 20, 0, -20, 0],
+            y: [0, 50, 100, 50, 0],
+            x: [0, 30, 0, -30, 0],
+            opacity: [0.2, 0.1, 0.2, 0.3, 0.2]
+          }}
+          transition={{ duration: 23, repeat: Infinity, repeatType: "mirror", delay: 0.5 }}
+        />
+        <motion.div 
+          className="absolute w-10 h-10 opacity-15"
+          style={{ 
+            top: '80%', 
+            left: '60%',
+            clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
+            background: '#ff0087'
+          }}
+          animate={{ 
+            rotate: [0, -30, 0, 30, 0],
+            y: [0, -40, -80, -40, 0],
+            x: [0, -20, 0, 20, 0],
+            opacity: [0.15, 0.1, 0.15, 0.25, 0.15]
+          }}
+          transition={{ duration: 19, repeat: Infinity, repeatType: "mirror", delay: 2.5 }}
+        />
+      </div>
+
       {/* Top Section - Title and Info button */}
       <div className="w-full pt-2 pb-0 relative z-10">
         {/* Game title with Squid Game style - reduced spacing */}
@@ -380,7 +464,7 @@ export default function Home() {
             <div className="text-white space-y-4">
               <div className="flex items-start space-x-2">
                 <div className="bg-[#ff0087] text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">1</div>
-                <p>You'll see one card facing up. This is your reference card.</p>
+                <p>You&apos;ll see one card facing up. This is your reference card.</p>
               </div>
               
               <div className="flex items-start space-x-2">
