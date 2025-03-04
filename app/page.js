@@ -1,101 +1,183 @@
-import Image from "next/image";
+'use client'
+import { useState, useEffect } from "react";
+import { getRandomCard } from "../utils/fetchCard";
+import { motion } from "framer-motion";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [currentCard, setCurrentCard] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [isNewCard, setIsNewCard] = useState(false);
+  const [error, setError] = useState(null);
+  const [showFront, setShowFront] = useState(true);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    fetchNewCard();
+  }, []);
+
+  async function fetchNewCard() {
+    setLoading(true);
+    setError(null);
+    try {
+      console.log("Fetching new card...");
+      const card = await getRandomCard();
+      console.log("Card received:", card);
+      
+      if (card) {
+        setCurrentCard(card);
+        setIsNewCard(true);
+        setShowFront(false);
+        setTimeout(() => {
+          setShowFront(true);
+          setIsNewCard(false);
+        }, 500);
+      } else {
+        setError("Failed to fetch card from API");
+      }
+    } catch (error) {
+      console.error("Error fetching card:", error);
+      setError("An error occurred while fetching the card");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const getCardColor = (suit) => {
+    return ['hearts', 'diamonds'].includes(suit?.toLowerCase()) ? 'text-[#ff0087]' : 'text-[#42c2dc]';
+  };
+
+  const getSuitSymbol = (suit) => {
+    if (!suit) return '';
+    const symbols = {
+      'hearts': '♥',
+      'diamonds': '♦',
+      'clubs': '♣',
+      'spades': '♠'
+    };
+    return symbols[suit.toLowerCase()] || suit;
+  };
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="flex flex-col items-center justify-center min-h-screen p-4 font-mono relative overflow-hidden"
+      style={{ 
+        background: 'linear-gradient(to bottom, #1a1a1a, #0d0d0d)',
+      }}
+    >
+      {/* Background patterns inspired by Squid Game */}
+      <div className="absolute top-0 left-0 right-0 bottom-0 opacity-10">
+        <div className="absolute top-[20%] left-[10%] w-20 h-20 rounded-full border-4 border-[#ff0087]"></div>
+        <div className="absolute top-[40%] left-[80%] w-16 h-16 border-4 border-[#42c2dc]"></div>
+        <div className="absolute top-[70%] left-[20%] w-14 h-14 border-4 border-[#42c2dc]" 
+             style={{clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'}}></div>
+        <div className="absolute top-[30%] left-[50%] w-16 h-16 border-4 border-[#ff0087] rounded"></div>
+        <div className="absolute top-[60%] left-[70%] w-12 h-12 rounded-full border-4 border-[#ff0087]"></div>
+      </div>
+      
+      {/* Game title with Squid Game style */}
+      <motion.div
+        className="mb-12 text-center relative z-10"
+        initial={{ y: -50 }}
+        animate={{ y: 0 }}
+        transition={{ type: "spring", stiffness: 100 }}
+      >
+        <h1 className="text-6xl font-bold text-[#ff0087] tracking-wider">
+          CARD GAME
+        </h1>
+        <div className="absolute -bottom-12 left-0 right-0 flex justify-center space-x-4">
+          <div className="w-10 h-10 bg-[#42c2dc] rounded-full"></div>
+          <div className="w-10 h-10 bg-[#ff0087] rounded"></div>
+          <div className="w-10 h-10 bg-[#42c2dc]" style={{clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'}}></div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      </motion.div>
+      
+      {error && (
+        <div className="bg-[#ff0087] text-white p-4 rounded-md mb-4 border-2 border-white z-10">
+          {error}
+        </div>
+      )}
+      
+      {currentCard ? (
+        <motion.div 
+          className="relative w-64 h-96 rounded-xl overflow-hidden shadow-2xl bg-white mb-8 border-4 border-[#ff0087] z-10"
+          initial={{ rotateY: 180 }}
+          animate={{ rotateY: isNewCard ? 180 : 0 }}
+          transition={{ duration: 0.6 }}
+          style={{
+            boxShadow: '0 0 30px rgba(255, 0, 135, 0.3)'
+          }}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          {showFront ? (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+              className="absolute inset-0 flex flex-col items-center justify-between p-6"
+            >
+              <div className={`text-3xl font-bold self-start ${getCardColor(currentCard.suit)}`}>
+                {currentCard.rank}
+                <span className="ml-1">{getSuitSymbol(currentCard.suit)}</span>
+              </div>
+              
+              <div className={`text-8xl ${getCardColor(currentCard.suit)}`}>
+                {getSuitSymbol(currentCard.suit)}
+              </div>
+              
+              <div className={`text-3xl font-bold self-end rotate-180 ${getCardColor(currentCard.suit)}`}>
+                {currentCard.rank}
+                <span className="ml-1">{getSuitSymbol(currentCard.suit)}</span>
+              </div>
+            </motion.div>
+          ) : (
+            <div className="absolute inset-0 bg-[#ff0087] flex items-center justify-center">
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-16 bg-white rounded-full mb-4"></div>
+                <div className="w-16 h-16 bg-white" style={{clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'}}></div>
+              </div>
+            </div>
+          )}
+        </motion.div>
+      ) : (
+        <motion.div 
+          className="w-64 h-96 rounded-xl bg-[#1a1a1a] flex items-center justify-center border-4 border-[#ff0087] z-10"
+          animate={{ opacity: loading ? [0.5, 1, 0.5] : 1 }}
+          transition={{ repeat: loading ? Infinity : 0, duration: 1.5 }}
+          style={{
+            boxShadow: '0 0 30px rgba(255, 0, 135, 0.3)'
+          }}
         >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          <div className="flex flex-col items-center">
+            <motion.div 
+              animate={{ rotate: loading ? 360 : 0 }}
+              transition={{ repeat: loading ? Infinity : 0, duration: 2, ease: "linear" }}
+              className="w-16 h-16 border-t-4 border-[#42c2dc] rounded-full mb-4"
+            ></motion.div>
+            <p className="text-xl font-bold text-[#42c2dc]">Loading...</p>
+          </div>
+        </motion.div>
+      )}
+      
+      <div className="flex space-x-4 mt-8 z-10">
+        <motion.button
+          className="px-10 py-4 bg-[#ff0087] hover:bg-[#d10070] text-white rounded-none border-2 border-white shadow-lg text-lg font-bold tracking-wider"
+          whileHover={{ scale: 1.05, boxShadow: '0 0 15px rgba(255, 0, 135, 0.7)' }}
+          whileTap={{ scale: 0.95 }}
+          onClick={fetchNewCard}
+          disabled={loading}
+          style={{
+            boxShadow: '0 0 10px rgba(255, 0, 135, 0.5)'
+          }}
         >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+          {loading ? 'LOADING...' : 'NEXT CARD'}
+        </motion.button>
+      </div>
+
+      {/* Pink light effect */}
+      <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-[#ff0087] via-[#ff008730] to-transparent z-0"></div>
+      
+      {/* Teal light effect from top */}
+      <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-[#42c2dc20] to-transparent z-0"></div>
+    </motion.div>
   );
 }
