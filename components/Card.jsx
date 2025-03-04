@@ -203,7 +203,7 @@ export default function Card({
                 <div className="w-4 h-4 bg-[#ff0087] rounded"></div>
                 <div className="w-4 h-4 bg-[#42c2dc]" style={{clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'}}></div>
               </div>
-              <div className="text-white font-bold text-4xl mt-2">GAME</div>
+              <div className="text-white font-bold text-4xl mt-2">GAMES</div>
             </div>
             
             {/* Bottom patterns */}
