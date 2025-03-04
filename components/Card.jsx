@@ -5,37 +5,43 @@ import { useState, useEffect } from "react";
 export default function Card({ 
   card, 
   isNew, 
-  showFront = true,
+  showFront = false, // Default to false (face down)
   isRevealing = false,
   guessResult = null
 }) {
-  const [isFlipping, setIsFlipping] = useState(false);
-
-  useEffect(() => {
-    if (isNew || isRevealing) {
-      setIsFlipping(true);
-      const timer = setTimeout(() => {
-        setIsFlipping(false);
-      }, 600);
-      return () => clearTimeout(timer);
-    }
-  }, [isNew, isRevealing]);
+  if (!card) return null;
 
   const getCardColor = (suit) => {
     return ['hearts', 'diamonds'].includes(suit?.toLowerCase()) ? 'text-[#ff0087]' : 'text-[#42c2dc]';
   };
 
   const getSuitSymbol = (suit) => {
-    if (!suit) return '';
-    const symbols = {
-      'hearts': '♥',
-      'diamonds': '♦',
-      'clubs': '♣',
-      'spades': '♠'
-    };
-    return symbols[suit.toLowerCase()] || suit;
+    switch (suit.toLowerCase()) {
+      case 'hearts': return '♥';
+      case 'diamonds': return '♦';
+      case 'clubs': return '♣';
+      case 'spades': return '♠';
+      default: return '';
+    }
   };
-  
+
+  const getSuitColor = (suit) => {
+    if (suit.toLowerCase() === 'hearts' || suit.toLowerCase() === 'diamonds') {
+      return 'text-red-600';
+    }
+    return 'text-black';
+  };
+
+  const getCardValue = (value) => {
+    switch (value) {
+      case 1: return 'A';
+      case 11: return 'J';
+      case 12: return 'Q';
+      case 13: return 'K';
+      default: return value.toString();
+    }
+  };
+
   // Function to render the card content based on rank
   const renderCardContent = (card) => {
     const isFaceCard = ['K', 'Q', 'J'].includes(card.rank);
@@ -97,18 +103,18 @@ export default function Card({
       // Regular card
       return (
         <>
-          <div className={`text-3xl font-bold self-start ${getCardColor(card.suit)}`}>
+          <div className={`text-3xl sm:text-4xl md:text-5xl font-bold self-start ${getCardColor(card.suit)}`}>
             {card.rank}
-            <span className="ml-1">{getSuitSymbol(card.suit)}</span>
+            <span className="ml-1 text-4xl sm:text-5xl md:text-6xl">{getSuitSymbol(card.suit)}</span>
           </div>
           
           <div className={`text-8xl ${getCardColor(card.suit)}`}>
             {getSuitSymbol(card.suit)}
           </div>
           
-          <div className={`text-3xl font-bold self-end rotate-180 ${getCardColor(card.suit)}`}>
+          <div className={`text-3xl sm:text-4xl md:text-5xl font-bold self-end rotate-180 ${getCardColor(card.suit)}`}>
             {card.rank}
-            <span className="ml-1">{getSuitSymbol(card.suit)}</span>
+            <span className="ml-1 text-4xl sm:text-5xl md:text-6xl">{getSuitSymbol(card.suit)}</span>
           </div>
         </>
       );
@@ -119,19 +125,16 @@ export default function Card({
   const getCardBorderColor = () => {
     if (guessResult === true) return 'border-[#42c2dc]'; // Correct guess (teal)
     if (guessResult === false) return 'border-[#ff0087]'; // Wrong guess (pink)
-    return 'border-[#ff0087]'; // Default (pink)
+    return 'border-white'; // Default (white)
   };
-
-  // The actual display state - this determines if we're showing front or back
-  const displayFront = showFront || (isRevealing && !isFlipping);
 
   return (
     <div className="perspective-1000">
       <motion.div 
-        className={`relative w-64 h-96 rounded-xl overflow-hidden shadow-2xl bg-white border-4 ${getCardBorderColor()} z-10`}
+        className={`relative w-48 h-72 sm:w-56 sm:h-80 md:w-64 md:h-96 rounded-xl overflow-hidden shadow-2xl bg-white border-4 ${getCardBorderColor()} z-10`}
         initial={{ rotateY: showFront ? 0 : 180 }}
         animate={{ 
-          rotateY: displayFront ? 0 : 180,
+          rotateY: showFront ? 0 : 180, // This is crucial - must use the showFront prop directly
           scale: guessResult !== null ? [1, 1.05, 1] : 1
         }}
         transition={{ duration: 0.6 }}
@@ -141,55 +144,76 @@ export default function Card({
         }}
       >
         {/* Front of card */}
-        <div 
-          className="absolute inset-0 flex flex-col items-center justify-between p-6 backface-hidden"
+        <motion.div 
+          className="absolute w-full h-full backface-hidden bg-white"
           style={{ 
             backfaceVisibility: 'hidden',
-            WebkitBackfaceVisibility: 'hidden'
+            transform: showFront ? 'rotateY(0deg)' : 'rotateY(180deg)'
           }}
         >
-          {card && renderCardContent(card)}
-        </div>
-
-        {/* Back of card */}
-        <div
-          className="absolute inset-0 bg-[#ff0087] flex items-center justify-center backface-hidden"
-          style={{ 
-            transform: 'rotateY(180deg)',
-            backfaceVisibility: 'hidden',
-            WebkitBackfaceVisibility: 'hidden'
-          }}
-        >
-          <div className="flex flex-col items-center justify-center h-full">
-            {/* Squid Game shapes in vertical arrangement */}
-            <motion.div 
-              className="w-16 h-16 bg-white rounded-full mb-6"
-              animate={{ scale: [1, 1.05, 1, 0.98, 1] }}
-              transition={{ duration: 4, repeat: Infinity, repeatType: "mirror" }}
-            />
-            <motion.div 
-              className="w-16 h-16 bg-white rounded mb-6"
-              animate={{ scale: [1, 0.98, 1, 1.05, 1], rotate: [0, 2, 0, -2, 0] }}
-              transition={{ duration: 4, repeat: Infinity, repeatType: "mirror", delay: 0.5 }}
-            />
-            <motion.div 
-              className="w-16 h-16 bg-white"
-              style={{clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'}}
-              animate={{ scale: [1, 1.03, 0.97, 1.03, 1], rotate: [0, -2, 0, 2, 0] }}
-              transition={{ duration: 4, repeat: Infinity, repeatType: "mirror", delay: 1 }}
-            />
-            
-            {/* Card border decorative elements */}
-            <div className="absolute top-4 left-4 w-8 h-8 border-2 border-white rounded-full opacity-40"></div>
-            <div className="absolute top-4 right-4 w-8 h-8 border-2 border-white rounded opacity-40"></div>
-            <div className="absolute bottom-4 left-4 w-8 h-8 border-2 border-white opacity-40" 
-                style={{clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'}}></div>
-            <div className="absolute bottom-4 right-4 w-8 h-8 border-2 border-white rounded-full opacity-40"></div>
+          {/* Card corners */}
+          <div className="absolute top-4 left-4">
+            <div className={`font-bold text-2xl sm:text-3xl ${getSuitColor(card.suit)}`}>
+              {getCardValue(card.value)}
+            </div>
+            <div className={`text-2xl sm:text-3xl ${getSuitColor(card.suit)}`}>
+              {getSuitSymbol(card.suit)}
+            </div>
           </div>
           
-          {/* Card border */}
-          <div className="absolute inset-5 border border-white opacity-30 rounded-lg"></div>
-        </div>
+          <div className="absolute bottom-4 right-4 transform rotate-180">
+            <div className={`font-bold text-2xl sm:text-3xl ${getSuitColor(card.suit)}`}>
+              {getCardValue(card.value)}
+            </div>
+            <div className={`text-2xl sm:text-3xl ${getSuitColor(card.suit)}`}>
+              {getSuitSymbol(card.suit)}
+            </div>
+          </div>
+          
+          {/* Large centered suit symbol */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className={`text-8xl sm:text-9xl md:text-[10rem] font-bold ${getSuitColor(card.suit)}`}>
+              {getSuitSymbol(card.suit)}
+            </div>
+          </div>
+        </motion.div>
+        
+        {/* Squid Game themed back */}
+        <motion.div 
+          className="absolute w-full h-full backface-hidden bg-[#1a1a1a] flex items-center justify-center"
+          style={{ 
+            backfaceVisibility: 'hidden',
+            transform: showFront ? 'rotateY(180deg)' : 'rotateY(0deg)'
+          }}
+        >
+          {/* Squid Game style card back */}
+          <div className="w-full h-full p-4 flex flex-col items-center justify-between">
+            {/* Top patterns */}
+            <div className="flex justify-center space-x-3 mt-2">
+              <div className="w-10 h-10 bg-[#42c2dc] rounded-full"></div>
+              <div className="w-10 h-10 bg-[#ff0087] rounded"></div>
+              <div className="w-10 h-10 bg-[#42c2dc]" style={{clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'}}></div>
+            </div>
+            
+            {/* Center logo */}
+            <div className="border-4 border-white rounded-lg p-8 flex flex-col items-center justify-center">
+              <div className="text-white font-bold text-4xl mb-2">CARD</div>
+              <div className="flex justify-center space-x-2">
+                <div className="w-4 h-4 bg-[#42c2dc] rounded-full"></div>
+                <div className="w-4 h-4 bg-[#ff0087] rounded"></div>
+                <div className="w-4 h-4 bg-[#42c2dc]" style={{clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'}}></div>
+              </div>
+              <div className="text-white font-bold text-4xl mt-2">GAME</div>
+            </div>
+            
+            {/* Bottom patterns */}
+            <div className="flex justify-center space-x-3 mb-2">
+              <div className="w-10 h-10 bg-[#ff0087]" style={{clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)'}}></div>
+              <div className="w-10 h-10 bg-[#42c2dc] rounded"></div>
+              <div className="w-10 h-10 bg-[#ff0087] rounded-full"></div>
+            </div>
+          </div>
+        </motion.div>
       </motion.div>
     </div>
   );

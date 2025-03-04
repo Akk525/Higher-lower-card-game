@@ -6,71 +6,54 @@ export default function GameControls({
   onHigher, 
   onLower, 
   onRestart, 
-  disabled, 
-  gameOver,
-  guess,
-  guessResult
+  gameOver, 
+  loading = false,
+  showButtons = true,  // This might be causing your issue
+  guess = null
 }) {
   return (
-    <div className="flex flex-col items-center space-y-6 z-10">
-      {/* Game result message */}
-      {guessResult !== null && (
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className={`text-2xl font-bold mb-4 ${guessResult ? 'text-[#42c2dc]' : 'text-[#ff0087]'}`}
-        >
-          {guessResult 
-            ? 'Correct! Keep going!' 
-            : 'Game Over! Your guess was wrong.'}
-        </motion.div>
-      )}
-      
-      {/* Game controls */}
-      <div className="flex space-x-6">
+    <motion.div 
+      className="flex justify-center items-center space-x-4 z-10 mt-2"
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 0.3 }}
+    >
+      {gameOver ? (
         <motion.button
-          className={`px-8 py-4 bg-[#42c2dc] hover:bg-[#37a9c0] text-white rounded-none border-2 border-white shadow-lg text-lg font-bold tracking-wider flex items-center ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
-          whileHover={!disabled ? { scale: 1.05, boxShadow: '0 0 15px rgba(66, 194, 220, 0.7)' } : {}}
-          whileTap={!disabled ? { scale: 0.95 } : {}}
-          onClick={onHigher}
-          disabled={disabled}
-          style={{
-            boxShadow: '0 0 10px rgba(66, 194, 220, 0.5)'
-          }}
-        >
-          <ArrowUpCircle className="mr-2" size={24} />
-          HIGHER
-        </motion.button>
-        
-        <motion.button
-          className={`px-8 py-4 bg-[#ff0087] hover:bg-[#d10070] text-white rounded-none border-2 border-white shadow-lg text-lg font-bold tracking-wider flex items-center ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
-          whileHover={!disabled ? { scale: 1.05, boxShadow: '0 0 15px rgba(255, 0, 135, 0.7)' } : {}}
-          whileTap={!disabled ? { scale: 0.95 } : {}}
-          onClick={onLower}
-          disabled={disabled}
-          style={{
-            boxShadow: '0 0 10px rgba(255, 0, 135, 0.5)'
-          }}
-        >
-          <ArrowDownCircle className="mr-2" size={24} />
-          LOWER
-        </motion.button>
-      </div>
-      
-      {/* Restart button (visible when game is over) */}
-      {gameOver && (
-        <motion.button
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="px-8 py-4 bg-white text-[#1a1a1a] hover:bg-gray-200 rounded-none border-2 border-[#42c2dc] shadow-lg text-lg font-bold tracking-wider flex items-center mt-4"
-          whileHover={{ scale: 1.05, boxShadow: '0 0 15px rgba(255, 255, 255, 0.7)' }}
+          className="px-6 py-3 bg-[#42c2dc] hover:bg-[#35a3b9] text-white rounded-none border-2 border-white shadow-lg text-base font-bold tracking-wider flex items-center"
+          whileHover={{ scale: 1.05, boxShadow: '0 0 15px rgba(66, 194, 220, 0.7)' }}
           whileTap={{ scale: 0.95 }}
           onClick={onRestart}
         >
-          <RefreshCw className="mr-2" size={24} />
+          <RefreshCw size={20} className="mr-2" />
           PLAY AGAIN
         </motion.button>
+      ) : (
+        // Remove the showButtons condition or fix the logic in page.js that sets showButtons
+        <>
+          <motion.button
+            className={`px-4 py-3 ${guess === true ? 'bg-white text-[#42c2dc]' : 'bg-[#42c2dc] text-white'} hover:bg-[#35a3b9] hover:text-white rounded-none border-2 border-white shadow-lg text-base font-bold tracking-wider flex items-center`}
+            whileHover={{ scale: 1.05, boxShadow: '0 0 15px rgba(66, 194, 220, 0.7)' }}
+            whileTap={{ scale: 0.95 }}
+            onClick={onHigher}
+            disabled={loading}
+          >
+            <ArrowUpCircle size={20} className="mr-2" />
+            HIGHER
+          </motion.button>
+          
+          <motion.button
+            className={`px-4 py-3 ${guess === false ? 'bg-white text-[#ff0087]' : 'bg-[#ff0087] text-white'} hover:bg-[#d10070] hover:text-white rounded-none border-2 border-white shadow-lg text-base font-bold tracking-wider flex items-center`}
+            whileHover={{ scale: 1.05, boxShadow: '0 0 15px rgba(255, 0, 135, 0.7)' }}
+            whileTap={{ scale: 0.95 }}
+            onClick={onLower}
+            disabled={loading}
+          >
+            <ArrowDownCircle size={20} className="mr-2" />
+            LOWER
+          </motion.button>
+        </>
       )}
-    </div>
+    </motion.div>
   );
 }
