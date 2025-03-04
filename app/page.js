@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { getRandomCard } from "../utils/fetchCard";
 import { motion } from "framer-motion";
-import Card from "../components/card";
+import Card from "../components/Card";
 import GameControls from "../components/GameControls";
 import ScoreBoard from "../components/ScoreBoard";
 
