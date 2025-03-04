@@ -2,7 +2,7 @@
 
 A sleek, interactive card game built with **Next.js** where players test their luck by guessing whether the next card will be **higher or lower** than the current one. Features a **visual style inspired by Squid Game**.
 
-![Higher-Lower Card Game](https://example.com/screenshot.png)
+![Higher-Lower Card Game](public/images/screenshot.png)
 
 ---
 
